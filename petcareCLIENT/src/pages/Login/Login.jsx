@@ -1,82 +1,83 @@
 import React, { useState } from 'react';
-// import { useNavigate } from 'react-router-dom';
 import './Login.css';
 import dogImage from '../../assets/img/Perrito.jpg';
 
 const Login = ({ onLogin }) => {
     const [showPassword, setShowPassword] = useState(false);
     const [isTypingPassword, setIsTypingPassword] = useState(false);
-  
+
     const togglePasswordVisibility = () => {
-      setShowPassword(!showPassword);
+        setShowPassword(!showPassword);
     };
-  
+
     const handleLogin = () => {
-      // Redirigir al dashboard
-      if (onLogin) {
-        onLogin('/Dashboard'); // Llama a la función onLogin
-      } else {
-        window.location.href = '/Dashboard';
-      }
+        if (onLogin) {
+            onLogin('/Dashboard');
+        } else {
+            window.location.href = '/Dashboard';
+        }
     };
-  
+
     const handleSubmit = (e) => {
-      e.preventDefault();
-      const form = e.target;
-      const username = form.elements.username?.value; // Accede de forma segura
-      const password = form.elements.password?.value; // Accede de forma segura
-  
-      // Verificar que los campos no estén vacíos
-      if (username && password) {
-        handleLogin();
-        form.reset(); // Limpia el formulario
-      } else {
-        alert('Por favor, complete todos los campos.');
-      }
+        e.preventDefault();
+        const form = e.target;
+        const username = form.elements.username?.value;
+        const password = form.elements.password?.value;
+
+        if (username && password) {
+            handleLogin();
+            form.reset();
+        } else {
+            alert('Por favor, complete todos los campos.');
+        }
     };
-  
+
     return (
-      <div className="login-container">
-        <h2>¡BIENVENIDO!</h2>
-        <img 
-          src={dogImage} 
-          alt="perrito"
-          className={`dog-image ${isTypingPassword ? 'dog-hide-eyes' : ''}`} 
-        />
-        <form onSubmit={handleSubmit}>
-          <label>
-            Usuario:
-            <input 
-              type="text" 
-              name="username" // Asegúrate de que 'name' esté correctamente definido
-              placeholder="Ingrese su usuario"
-            />
-          </label>
-  
-          <label>
-            Contraseña:
-            <input
-              type={showPassword ? 'text' : 'password'}
-              name="password" // Asegúrate de que 'name' esté correctamente definido
-              placeholder="Ingrese su contraseña"
-              onFocus={() => setIsTypingPassword(true)}
-              onBlur={() => setIsTypingPassword(false)}
-            />
-          </label>
-  
-          <label className="password-toggle">
-            <input 
-              type="checkbox" 
-              onClick={togglePasswordVisibility} 
-            />
-            {showPassword ? 'Ocultar Contraseña' : 'Mostrar Contraseña'}
-          </label>
-  
-          <button type="submit">Ingresar</button>
-          <button type="button">Registrarse</button>
-        </form>
-      </div>
+        <div className="login-page">
+            <div className="login-container">
+                <h2>¡BIENVENIDO!</h2>
+                <img
+                    src={dogImage}
+                    alt="perrito"
+                    className={`dog-image ${isTypingPassword ? 'dog-hide-eyes' : ''}`}
+                />
+                <form onSubmit={handleSubmit}>
+                    <label>
+                        Usuario:
+                        <input
+                            type="text"
+                            name="username"
+                            placeholder="Ingrese su usuario"
+                        />
+                    </label>
+
+                    <label>
+                        Contraseña:
+                        <input
+                            type={showPassword ? 'text' : 'password'}
+                            name="password"
+                            placeholder="Ingrese su contraseña"
+                            onFocus={() => setIsTypingPassword(true)}
+                            onBlur={() => setIsTypingPassword(false)}
+                        />
+                    </label>
+
+                    <label className="password-toggle">
+                        <input
+                            type="checkbox"
+                            onClick={togglePasswordVisibility}
+                        />
+                        {showPassword ? 'Ocultar Contraseña' : 'Mostrar Contraseña'}
+                    </label>
+
+                    <div className="button-container">
+                        <button type="submit" style={{ borderRadius: '5px' }}>Ingresar</button>
+                        <button type="button" style={{ borderRadius: '5px' }}>Registrarse</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     );
-  };
-  
-  export default Login;
+};
+
+export default Login;

@@ -1,36 +1,59 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
-
+/* Estilo global del cuerpo */
 body {
+    margin: 0;
+    padding: 0;
     font-family: 'Roboto', sans-serif;
-    background: lightgray;
+}
+
+/* Estilo de la página de login */
+.login-page {
+    background: rgb(39, 175, 173) url('../../assets/img/fondito.webp') no-repeat center center fixed;
+    background-size: cover;
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 90vh;
+    height: 100vh;
 }
 
+/* Contenedor principal del login */
 .login-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background-color: #9cbfc6;
-    padding: 40px; /* Ajusta el padding para dar espacio al perrito */
+    background-color: rgba(147, 207, 206, 0.9); /* Transparencia */
+    padding: 40px;
     border-radius: 10px;
     position: relative;
+
+    /* Efecto de desvanecimiento en los bordes */
+    box-shadow: 0 0 30px 20px rgba(147, 207, 206, 0.5),
+                0 0 50px 50px rgba(39, 175, 173, 0.3);
 }
 
+/* Imagen del perrito */
 .dog-image {
-    width: 150px; /* Tamaño de la imagen */
-    height: 150px; /* Tamaño de la imagen */
-    border-radius: 50%; /* Hace la imagen redonda */
-    margin-bottom: 20px; /* Espacio entre la imagen y el título */
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin-bottom: 20px;
 }
 
+/* Ocultar los ojos del perrito */
+.dog-hide-eyes {
+    filter: brightness(0.5); /* Simula que está "tapándose" */
+}
+
+/* Formulario */
 form {
     display: flex;
     flex-direction: column;
     width: 300px;
+}
+
+label {
+    margin-bottom: 10px;
+    font-weight: bold;
 }
 
 input {
@@ -39,19 +62,14 @@ input {
     width: 100%;
     border: 1px solid lightgray;
     outline: none;
-    transition: all 0.3s ease-in-out; /* Transición suave para el campo */
+    transition: all 0.3s ease-in-out;
 }
 
 input:focus {
     outline: 3px solid #1f7283;
 }
 
-label {
-    margin-bottom: 10px;
-    padding: 5px;
-    border-radius: 10px;
-}
-
+/* Botones */
 button {
     margin: 5px auto;
     padding: 10px 20px;
@@ -64,17 +82,23 @@ button {
     cursor: pointer;
 }
 
-button:focus {
-    outline: 3px solid #1f7283;
-}
 
-/* Estilo para el checkbox de mostrar/ocultar contraseña */
 .password-toggle {
     display: flex;
-    justify-content: flex-start;
+    align-items: center;
+    margin-top: 10px;
 }
 
 .password-toggle input {
     width: auto;
-    margin-right: 5px; /* Ajusta la casilla para mostrar/ocultar */
+    margin-right: 5px;
 }
+
+/* Contenedor de botones */
+.button-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;    
+}
+
