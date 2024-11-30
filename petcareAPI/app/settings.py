@@ -10,6 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
+import os
+
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -25,7 +27,9 @@ SECRET_KEY = 'django-insecure-n5*jl&^yuyxit!%6wp7qx10c@!o3$62cj*j-pqsl_5fw^+()1%
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+CORS_ALLOW_ALL_ORIGINS = True
+
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -41,10 +45,13 @@ INSTALLED_APPS = [
     'core.user',
     'core.auth',
     'core.pet',
-    'rest_framework'
+    'rest_framework',
+    'corsheaders'
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -84,7 +91,7 @@ DATABASES = {
         'NAME': "gatitos",
         'USER': "postgres",
         'PASSWORD': "root",
-        'HOST': "postgres",
+        'HOST': os.environ.get('DB_HOST', 'postgres'),
         'PORT': "5432",
     }
 }

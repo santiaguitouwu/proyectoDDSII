@@ -1,0 +1,29 @@
+.form-create-pet {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    position: relative;
+}
+
+.box-input {
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+}
+
+label {
+    font-weight: bold;
+    margin: 0px;
+}
+
+.input-create-pet {
+    width: 350px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+}
+
+.btn-submit {
+    width: 100%;
+    color: white;
+}

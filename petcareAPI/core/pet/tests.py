@@ -1,5 +1,3 @@
-# core/pet/tests.py
-
 from django.test import TestCase
 from rest_framework.test import APIClient
 from rest_framework import status
@@ -15,10 +13,12 @@ class MascotaCRUDTests(TestCase):
             'especie': 'Perro',
             'raza': 'Golden Retriever',
             'edad': 1,
-            'descripcion': 'Un perro amigable y juguetón'
+            'descripcion': 'Un perro amigable y juguetón',
+            'estado_adopcion': True
         }
         self.mascota = Pet.objects.create(**self.mascota_data)
         self.mascota_url = reverse('pet-detail', args=[self.mascota.id])  # URL para el detalle de la mascota api/v1/pet/1
+
     # TEST DAVID LOPEZ
     def test_crear_mascota(self):
         """Prueba la creación de una nueva mascota"""
@@ -35,7 +35,7 @@ class MascotaCRUDTests(TestCase):
     # TEST SANTIAGO JIMENEZ
     def test_actualizar_mascota(self):
         """Prueba la actualización de una mascota existente"""
-        nueva_data = {'nombre': 'Rex', 'especie': 'Perro', 'raza': 'Pastor Alemán', 'edad':7}
+        nueva_data = {'nombre': 'Rex', 'especie': 'Perro', 'raza': 'Pastor Alemán', 'edad':7,'estado_adopcion':True}
         response = self.client.put(self.mascota_url, nueva_data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.mascota.refresh_from_db()  # Actualiza la mascota desde la base de datos
@@ -46,4 +46,23 @@ class MascotaCRUDTests(TestCase):
         """Prueba la eliminación de una mascota"""
         response = self.client.delete(self.mascota_url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        self.assertEqual(Pet.objects.count(), 0)  # No deberían quedar mascotas en la base de datos
+        self.assertEqual(Pet.objects.count(), 0)  # No deberían quedar mascotas en la base de datos
+
+    # TEST LUIS CARABALI 
+    def test_validar_mascota_no_adoptada(self):
+        """Prueba el estado de adopcion de un animal x"""
+        # Primero, actualizamos el estado de adopción de la mascota a False
+        self.mascota.estado_adopcion = False
+        self.mascota.save()  # Guardamos los cambios en la base de datos
+        response = self.client.get(self.mascota_url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['estado_adopcion'], False)
+
+    def test_validar_mascota_adoptada(self):
+        """Prueba el estado de adopcion de un animal x"""
+        # Primero, actualizamos el estado de adopción de la mascota a True
+        self.mascota.estado_adopcion = True
+        self.mascota.save()  # Guardamos los cambios en la base de datos
+        response = self.client.get(self.mascota_url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['estado_adopcion'], True)

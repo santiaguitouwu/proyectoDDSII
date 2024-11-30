@@ -20,6 +20,7 @@ class Migration(migrations.Migration):
                 ('raza', models.CharField(max_length=50)),
                 ('edad', models.IntegerField()),
                 ('descripcion', models.TextField(blank=True)),
+                ('estado_adopcion', models.BooleanField(default=False)),
             ],
         ),
     ]

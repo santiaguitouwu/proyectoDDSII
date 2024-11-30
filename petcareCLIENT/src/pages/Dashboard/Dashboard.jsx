@@ -11,12 +11,26 @@ import crearMascotaImg4 from '../../assets/img/img4.jpg';
 import crearMascotaImg5 from '../../assets/img/img5.jpg';
 
 const Dashboard = () => {
-    const [isModalOpen, setModalOpen] = useState({ create: false, edit: false });
     const [currentIndex, setCurrentIndex] = useState(0);
     const images = [crearMascotaImg, crearMascotaImg2, crearMascotaImg3, crearMascotaImg4, crearMascotaImg5];
+    const [isModalCreateOpen, setModalCreateOpen] = useState(false);
+    const [isModalEditOpen, setModalEditOpen] = useState(false);
 
-    const openModal = (type) => setModalOpen({ ...isModalOpen, [type]: true });
-    const closeModal = () => setModalOpen({ create: false, edit: false });
+    const openModal = (action) => {
+        if (action === "CREATE") {
+            setModalCreateOpen(true);
+            setModalEditOpen(false);  
+        }
+        if (action === "EDIT") {
+            setModalEditOpen(true);
+            setModalCreateOpen(false);  
+        }
+    };
+
+    const closeModal = () => {
+        setModalCreateOpen(false);
+        setModalEditOpen(false);
+    };
 
     const handleHomeRedirect = () => {
         window.location.href = '/';
@@ -30,66 +44,42 @@ const Dashboard = () => {
         setCurrentIndex((prevIndex) => (prevIndex === images.length - 1 ? 0 : prevIndex + 1));
     };
 
-    const renderModal = (type) => (
-        <div className="modal">
-            <div className="modal-content">
-                <h2>{type === 'create' ? 'Crear Mascota' : 'Editar Mascota'}</h2>
-                <form>
-                    <label>
-                        Nombre:
-                        <input type="text" name="nombre" required />
-                    </label>
-                    <label>
-                        Edad:
-                        <input type="number" name="edad" required />
-                    </label>
-                    <label>
-                        Tipo:
-                        <input type="text" name="tipo" required />
-                    </label>
-                    <button type="submit">{type === 'create' ? 'Guardar' : 'Actualizar'}</button>
-                </form>
-                <button onClick={closeModal}>Cerrar</button>
-            </div>
-        </div>
-    );
-
     return (
         <div className="home-container">
             <header className="navbar1">
-                <h3>BIENVENIDO!</h3>
+                <h3>¡BIENVENIDO!</h3>
             </header>
 
             <aside className="sidebar">
                 <button onClick={handleHomeRedirect}>Salir</button>
-                <button onClick={() => openModal("create")}>Crear Mascota</button>
-                <button onClick={() => openModal("edit")}>Editar Mascota</button>
+                <button onClick={() => openModal("CREATE")}>Crear Mascota</button>
+                <button onClick={() => openModal("EDIT")}>Editar Mascota</button>
             </aside>
 
             <main>
                 <div className="carousel">
                     <button className="carousel-btn prev" onClick={goToPrevious}>&#8249;</button>
                     <div className="carousel-track">
-                        <img src={images[currentIndex]} />
+                        <img src={images[currentIndex]} alt="Imagen carrusel" />
                     </div>
                     <button className="carousel-btn next" onClick={goToNext}>&#8250;</button>
                 </div>
 
-                {isModalOpen.create && renderModal('create')}
-                {isModalOpen.edit && renderModal('edit')}
+                {/* Modal para Crear Mascota */}
+                {isModalCreateOpen && (
+                    <ModalCreate titleModal={"Crear Mascota"} isOpen={isModalCreateOpen} onClose={closeModal}>
+                        <FormCreatePet />
+                    </ModalCreate>
+                )}
 
-                <div className="card-container">
-                    <Card labelAction={"CREATE"} onActionBtn={openModal} actionIcon={<img src={crearMascotaImg} alt="Crear Mascota" />} />
-                    <Card labelAction={"EDIT"} onActionBtn={openModal} actionIcon={<img src={crearMascotaImg2} alt="Editar Mascota" />} />
-                </div>
+                {/* Modal para Editar Mascota */}
+                {isModalEditOpen && (
+                    <ModalEdit titleModal={"Editar Mascota"} isOpen={isModalEditOpen} onClose={closeModal}>
+                        <h5>Modal para editar mascota</h5>
+                    </ModalEdit>
+                )}
 
-                <ModalCreate titleModal={"Crear Mascota"} isOpen={isModalOpen.create} onClose={closeModal}>
-                    <FormCreatePet />
-                </ModalCreate>
-
-                <ModalEdit titleModal={"Editar Mascota"} isOpen={isModalOpen.edit} onClose={closeModal}>
-                    <h5>Modal para editar mascota</h5>
-                </ModalEdit>
+                
             </main>
         </div>
     );
