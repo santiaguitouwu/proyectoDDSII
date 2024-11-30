@@ -5,6 +5,7 @@ import './Dashboard.css';
 import Card from '../../components/Card';
 import ModalCreate from '../../components/Modal';
 import ModalEdit from '../../components/Modal';
+import EditPet from '../../components/EditPet';
 
 import FormCreatePet from '../../components/FormCreatePet';
 
@@ -66,7 +67,7 @@ const Dashboard = () => {
                 </ModalCreate>
 
                 <ModalEdit titleModal={"EDIT PET"} isOpen={isModalEditOpen} onClose={closeModal}>
-                    <h5>Modal para editar mascota</h5>
+                   <EditPet  />
                 </ModalEdit>
 
             </main>
