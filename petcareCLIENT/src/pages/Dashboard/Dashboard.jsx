@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './Dashboard.css';
-import Card from '../../components/Card';
+// import Card from '../../components/Card';
 import ModalCreate from '../../components/Modal';
 import ModalEdit from '../../components/Modal';
 import FormCreatePet from '../../components/FormCreatePet';
@@ -15,6 +15,15 @@ const Dashboard = () => {
     const images = [crearMascotaImg, crearMascotaImg2, crearMascotaImg3, crearMascotaImg4, crearMascotaImg5];
     const [isModalCreateOpen, setModalCreateOpen] = useState(false);
     const [isModalEditOpen, setModalEditOpen] = useState(false);
+    const [userName, setUserName] = useState('');
+
+    useEffect(() => {
+        // Leer el usuario del localStorage
+        const storedUser = JSON.parse(localStorage.getItem('user'));
+        if (storedUser && storedUser.username) {
+            setUserName(storedUser.username);
+        }
+    }, []);
 
     const openModal = (action) => {
         if (action === "CREATE") {
@@ -47,7 +56,7 @@ const Dashboard = () => {
     return (
         <div className="home-container">
             <header className="navbar1">
-                <h3>¡BIENVENIDO!</h3>
+                <h3>¡HOLA!, {userName}!</h3>
             </header>
 
             <aside className="sidebar">
