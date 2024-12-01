@@ -7,6 +7,7 @@ import Login from './pages/Login/Login'
 import Dashboard from './pages/Dashboard/Dashboard'
 import AdminPets from './pages/AdminPets/adminPets'
 import NotFound from './pages/NotFound/NotFound'
+import Register from './pages/Login/Register'
 
 // route handler entry point
 const router = createBrowserRouter([
@@ -29,6 +30,10 @@ const router = createBrowserRouter([
   {
     path: '*',
     element: <NotFound/>
+  },
+  {
+    path: '/Register',
+    element: <Register/>
   }
 ])
 

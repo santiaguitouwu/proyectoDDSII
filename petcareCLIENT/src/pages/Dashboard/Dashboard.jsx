@@ -1,47 +1,64 @@
-import React, { act, useState } from 'react';
-
+import { useState, useEffect } from 'react';
 import './Dashboard.css';
-
-import Card from '../../components/Card';
+// import Card from '../../components/Card';
 import ModalCreate from '../../components/Modal';
 import ModalEdit from '../../components/Modal';
 import EditPet from '../../components/EditPet';
-
 import FormCreatePet from '../../components/FormCreatePet';
+import crearMascotaImg from '../../assets/img/img.jpg';
+import crearMascotaImg2 from '../../assets/img/img2.jpg';
+import crearMascotaImg3 from '../../assets/img/img3.jpg';
+import crearMascotaImg4 from '../../assets/img/img4.jpg';
+import crearMascotaImg5 from '../../assets/img/img5.jpg';
 
 const Dashboard = () => {
-
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const images = [crearMascotaImg, crearMascotaImg2, crearMascotaImg3, crearMascotaImg4, crearMascotaImg5];
     const [isModalCreateOpen, setModalCreateOpen] = useState(false);
     const [isModalEditOpen, setModalEditOpen] = useState(false);
+    const [userName, setUserName] = useState('');
+
+    useEffect(() => {
+        // Leer el usuario del localStorage
+        const storedUser = JSON.parse(localStorage.getItem('user'));
+        if (storedUser && storedUser.username) {
+            setUserName(storedUser.username);
+        }
+    }, []);
 
     const openModal = (action) => {
-        if (action == "CREATE") {
+        if (action === "CREATE") {
             setModalCreateOpen(true);
+            setModalEditOpen(false);  
         }
-
-        if (action == "EDIT") {
-           
-            setModalEditOpen(true)
+        if (action === "EDIT") {
+            setModalEditOpen(true);
+            setModalCreateOpen(false);  
         }
-    }
+    };
 
     const closeModal = () => {
         setModalCreateOpen(false);
-        setModalEditOpen(false)
-    }
+        setModalEditOpen(false);
+    };
 
     const handleHomeRedirect = () => {
         window.location.href = '/';
     };
 
+    const goToPrevious = () => {
+        setCurrentIndex((prevIndex) => (prevIndex === 0 ? images.length - 1 : prevIndex - 1));
+    };
+
+    const goToNext = () => {
+        setCurrentIndex((prevIndex) => (prevIndex === images.length - 1 ? 0 : prevIndex + 1));
+    };
+
     return (
         <div className="home-container">
             <header className="navbar1">
-                <nav className="navbar-menu">
-                </nav>
-                <button className="login-button" onClick={handleHomeRedirect}>Salir</button>
+                <h3>¡HOLA!, {userName}!</h3>
             </header>
-
             <main className="box-content">
                 <ModalCreate isOpen={isModalCreateOpen} onClose={closeModal}>
                     <h2>Título del Modal</h2>
@@ -74,6 +91,5 @@ const Dashboard = () => {
         </div>
     );
 };
-
 
 export default Dashboard;
