@@ -67,49 +67,53 @@ const Login = ({ onLogin, onNavigateToRegister }) => {
     };
 
     return (
-        <div className="login-container">
-            <h2>¡BIENVENIDO!</h2>
-            <img
-                src={dogImage}
-                alt="perrito"
-                className={`dog-image ${isTypingPassword ? 'dog-hide-eyes' : ''}`}
-            />
-            <form onSubmit={handleSubmit}>
-                <label>
-                    Correo electrónico::
-                    <input
-                        type="email"
-                        name="email" // Asegúrate de que 'name' esté correctamente definido
-                        placeholder="Ingrese su correo"
-                    />
-                </label>
+        <div className="login-page">
+            <div className="login-container">
+                <h2>¡BIENVENIDO!</h2>
+                <img
+                    src={dogImage}
+                    alt="perrito"
+                    className={`dog-image ${isTypingPassword ? 'dog-hide-eyes' : ''}`}
+                />
+                <form onSubmit={handleSubmit}>
+                    <label>
+                        Correo electrónico:
+                        <input
+                            type="email"
+                            name="email"
+                            placeholder="Ingrese su correo"
+                        />
+                    </label>
 
-                <label>
-                    Contraseña:
-                    <input
-                        type={showPassword ? 'text' : 'password'}
-                        name="password" // Asegúrate de que 'name' esté correctamente definido
-                        placeholder="Ingrese su contraseña"
-                        onFocus={() => setIsTypingPassword(true)}
-                        onBlur={() => setIsTypingPassword(false)}
-                    />
-                </label>
+                    <label>
+                        Contraseña:
+                        <input
+                            type={showPassword ? 'text' : 'password'}
+                            name="password"
+                            placeholder="Ingrese su contraseña"
+                            onFocus={() => setIsTypingPassword(true)}
+                            onBlur={() => setIsTypingPassword(false)}
+                        />
+                    </label>
 
-                <label className="password-toggle">
-                    <input
-                        type="checkbox"
-                        onClick={togglePasswordVisibility}
-                    />
-                    {showPassword ? 'Ocultar Contraseña' : 'Mostrar Contraseña'}
-                </label>
+                    <label className="password-toggle">
+                        <input
+                            type="checkbox"
+                            onClick={togglePasswordVisibility}
+                        />
+                        {showPassword ? 'Ocultar Contraseña' : 'Mostrar Contraseña'}
+                    </label>
 
-                {error && <p className="error">{error}</p>}
+                    {error && <p className="error">{error}</p>}
 
-                <button type="submit">Ingresar</button>
-                <button type="button" onClick={handleNavigateToRegister}>
-                    Registrarse
-                </button>
-            </form>
+                    <div className="button-container">
+                        <button type="submit" style={{ borderRadius: '5px' }}>Ingresar</button>
+                        <button type="button" style={{ borderRadius: '5px' }} onClick={handleNavigateToRegister}>
+                            Registrarse
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     );
 };
