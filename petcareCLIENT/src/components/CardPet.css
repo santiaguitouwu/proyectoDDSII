@@ -1,6 +1,6 @@
 
 .scroll-container {
-    height: 400px; /* Altura máxima del contenedor */
+    height: 600px; /* Altura máxima del contenedor */
     overflow-y: scroll; /* Habilita el scroll vertical */
     padding: 10px;
     margin-top: 20px;
@@ -40,3 +40,8 @@
     font-weight: bold;
   }
   
+  .edit-button {
+    border-radius: 4px;
+    color: white;
+    width: 100%;
+  }
