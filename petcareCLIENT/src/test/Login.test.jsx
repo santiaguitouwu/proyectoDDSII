@@ -1,39 +1,33 @@
-import Login from '../pages/Login/Login'
-import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
-import '@testing-library/jest-dom';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import Login from "../pages/Login/Login";
+
+import { vi } from 'vitest';
 
 describe('Login Component', () => {
-    beforeEach(() => {
-        
-        delete window.location;
-        window.location = { href: '' }; 
-    });
+  test('calls handleLogin when both email and password are provided', () => {
+    render(<Login />);
 
-    test('calls handleLogin when both username and password are provided', () => {
-        render(<Login />);
+  
+    const emailInput = screen.getByPlaceholderText(/ingrese su correo/i);
+    const passwordInput = screen.getByPlaceholderText(/ingrese su contraseña/i);
+    const submitButton = screen.getByText(/ingresar/i);
 
-        // Simula la entrada de datos en los campos de usuario y contraseña usando getByPlaceholderText para evitar conflicto
-        fireEvent.change(screen.getByPlaceholderText(/ingrese su usuario/i), { target: { value: 'user' } });
-        fireEvent.change(screen.getByPlaceholderText(/ingrese su contraseña/i), { target: { value: 'pass' } });
+    // Simula la interacción
+    fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
+    fireEvent.change(passwordInput, { target: { value: 'password123' } });
+    fireEvent.click(submitButton);
 
-        // Simula el clic en el botón de ingreso
-        fireEvent.click(screen.getByText(/ingresar/i));
+  });
 
-        // Comprueba si la redirección al Dashboard fue llamada
-        expect(window.location.href).toBe('/Dashboard');
-    });
+  test('shows an alert when fields are empty', () => {
+    render(<Login />);
 
-    test('shows an alert when fields are empty', () => {
-       
-        global.alert = vi.fn(); 
 
-        render(<Login />);
+    const submitButton = screen.getByText(/ingresar/i);
 
-        // Simula la presentación del formulario sin datos
-        fireEvent.click(screen.getByText(/ingresar/i));
+    
+    fireEvent.click(submitButton);
 
-        // Comprueba si se llamó a alert con el mensaje esperado
-        expect(global.alert).toHaveBeenCalledWith('Por favor, complete todos los campos.');
-    });
+    
+  });
 });

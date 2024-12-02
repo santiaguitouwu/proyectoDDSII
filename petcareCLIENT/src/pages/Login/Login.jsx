@@ -1,34 +1,68 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import './Login.css';
 import dogImage from '../../assets/img/Perrito.jpg';
 
-const Login = ({ onLogin }) => {
+const Login = ({ onLogin, onNavigateToRegister }) => {
     const [showPassword, setShowPassword] = useState(false);
     const [isTypingPassword, setIsTypingPassword] = useState(false);
+    const [error, setError] = useState(null);
 
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword);
     };
 
     const handleLogin = () => {
+        // Redirigir al dashboard
         if (onLogin) {
-            onLogin('/Dashboard');
+            onLogin('/Dashboard'); // Llama a la función onLogin
         } else {
             window.location.href = '/Dashboard';
         }
     };
 
-    const handleSubmit = (e) => {
+    const handleNavigateToRegister = () => {
+        // Redirigir al registro
+        if (onNavigateToRegister) {
+            onNavigateToRegister('/Register'); // Llama a la función para ir a Register
+        } else {
+            window.location.href = '/Register';
+        }
+    };
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const form = e.target;
-        const username = form.elements.username?.value;
+        const email  = form.elements.email?.value;
         const password = form.elements.password?.value;
 
-        if (username && password) {
+        if (!email || !password) {
+            setError("Por favor, complete todos los campos.");
+            return;
+        }
+
+        try {
+            const response = await fetch("http://localhost:8000/api/v1/auth/login/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ email, password }),
+            });
+
+            if (!response.ok) {
+              const errorData = await response.json();
+              console.log("Error Response:", errorData); // Imprime los detalles del error
+              throw new Error(errorData.detail || "Credenciales incorrectas.");
+            }
+
+            const data = await response.json();
+            localStorage.setItem("accessToken", data.access);
+            localStorage.setItem("refreshToken", data.refresh);
+            localStorage.setItem("user", JSON.stringify(data.user));
+
             handleLogin();
-            form.reset();
-        } else {
-            alert('Por favor, complete todos los campos.');
+        } catch (err) {
+            setError(err.message);
         }
     };
 
@@ -43,11 +77,11 @@ const Login = ({ onLogin }) => {
                 />
                 <form onSubmit={handleSubmit}>
                     <label>
-                        Usuario:
+                        Correo electrónico:
                         <input
-                            type="text"
-                            name="username"
-                            placeholder="Ingrese su usuario"
+                            type="email"
+                            name="email"
+                            placeholder="Ingrese su correo"
                         />
                     </label>
 
@@ -70,9 +104,13 @@ const Login = ({ onLogin }) => {
                         {showPassword ? 'Ocultar Contraseña' : 'Mostrar Contraseña'}
                     </label>
 
+                    {error && <p className="error">{error}</p>}
+
                     <div className="button-container">
                         <button type="submit" style={{ borderRadius: '5px' }}>Ingresar</button>
-                        <button type="button" style={{ borderRadius: '5px' }}>Registrarse</button>
+                        <button type="button" style={{ borderRadius: '5px' }} onClick={handleNavigateToRegister}>
+                            Registrarse
+                        </button>
                     </div>
                 </form>
             </div>
