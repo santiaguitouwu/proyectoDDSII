@@ -84,10 +84,11 @@ jobs:
             - name: Connect to EC2
               run: |
                   ssh -o StrictHostKeyChecking=no -i ~/.ssh/aws_key ubuntu@ec2-18-216-190-163.us-east-2.compute.amazonaws.com "echo 'Connected!'"
-                  docker pull ghcr.io/santiaguitouwu/dds2_cli:stable
-                  docker pull ghcr.io/santiaguitouwu/dds2_api:stable
-                  docker pull ghcr.io/santiaguitouwu/dds2_api:canary
-                  docker pull ghcr.io/santiaguitouwu/dds2_cli:canary
+                  ssh -o StrictHostKeyChecking=no -i ~/.ssh/aws_key ubuntu@ec2-18-216-190-163.us-east-2.compute.amazonaws.com "docker pull ghcr.io/santiaguitouwu/dds2_cli:stable"
+                  ssh -o StrictHostKeyChecking=no -i ~/.ssh/aws_key ubuntu@ec2-18-216-190-163.us-east-2.compute.amazonaws.com "docker pull ghcr.io/santiaguitouwu/dds2_cli:canary"
+                  ssh -o StrictHostKeyChecking=no -i ~/.ssh/aws_key ubuntu@ec2-18-216-190-163.us-east-2.compute.amazonaws.com "docker pull ghcr.io/santiaguitouwu/dds2_cli:stable"
+                  ssh -o StrictHostKeyChecking=no -i ~/.ssh/aws_key ubuntu@ec2-18-216-190-163.us-east-2.compute.amazonaws.com "docker pull ghcr.io/santiaguitouwu/dds2_cli:canary"
+                  ssh -o StrictHostKeyChecking=no -i ~/.ssh/aws_key ubuntu@ec2-18-216-190-163.us-east-2.compute.amazonaws.com "docker images"
               env:
                   AWS_SSH_KEY: ${{ secrets.AWS_SSH_KEY }}
 
