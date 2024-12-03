@@ -78,7 +78,7 @@ jobs:
             - name: List project files for debugging
               run: |
                     pwd
-                    ls -ltr
+                    ls
             
             - name: Copy docker-compose.yml to AWS VM
               run: |
