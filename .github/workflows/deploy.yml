@@ -83,12 +83,12 @@ jobs:
               # Paso para conectarse a la instancia EC2
             - name: Connect to EC2
               run: |
-                  ssh -o StrictHostKeyChecking=no -i ~/.ssh/aws_key ubuntu@ec2-18-216-190-163.us-east-2.compute.amazonaws.com "echo 'Connected!'"
-                  ssh -o StrictHostKeyChecking=no -i ~/.ssh/aws_key ubuntu@ec2-18-216-190-163.us-east-2.compute.amazonaws.com "docker pull ghcr.io/santiaguitouwu/dds2_cli:stable"
-                  ssh -o StrictHostKeyChecking=no -i ~/.ssh/aws_key ubuntu@ec2-18-216-190-163.us-east-2.compute.amazonaws.com "docker pull ghcr.io/santiaguitouwu/dds2_cli:canary"
-                  ssh -o StrictHostKeyChecking=no -i ~/.ssh/aws_key ubuntu@ec2-18-216-190-163.us-east-2.compute.amazonaws.com "docker pull ghcr.io/santiaguitouwu/dds2_api:stable"
-                  ssh -o StrictHostKeyChecking=no -i ~/.ssh/aws_key ubuntu@ec2-18-216-190-163.us-east-2.compute.amazonaws.com "docker pull ghcr.io/santiaguitouwu/dds2_api:canary"
-                  ssh -o StrictHostKeyChecking=no -i ~/.ssh/aws_key ubuntu@ec2-18-216-190-163.us-east-2.compute.amazonaws.com "docker images"
+                  ssh -o StrictHostKeyChecking=no -i ~/.ssh/aws_key ubuntu@ec2-3-144-91-230.us-east-2.compute.amazonaws.com "echo 'Connected!'"
+                  ssh -o StrictHostKeyChecking=no -i ~/.ssh/aws_key ubuntu@ec2-3-144-91-230.us-east-2.compute.amazonaws.com "docker pull ghcr.io/santiaguitouwu/dds2_cli:stable"
+                  ssh -o StrictHostKeyChecking=no -i ~/.ssh/aws_key ubuntu@ec2-3-144-91-230.us-east-2.compute.amazonaws.com "docker pull ghcr.io/santiaguitouwu/dds2_cli:canary"
+                  ssh -o StrictHostKeyChecking=no -i ~/.ssh/aws_key ubuntu@ec2-3-144-91-230.us-east-2.compute.amazonaws.com "docker pull ghcr.io/santiaguitouwu/dds2_api:stable"
+                  ssh -o StrictHostKeyChecking=no -i ~/.ssh/aws_key ubuntu@ec2-3-144-91-230.us-east-2.compute.amazonaws.com "docker pull ghcr.io/santiaguitouwu/dds2_api:canary"
+                  ssh -o StrictHostKeyChecking=no -i ~/.ssh/aws_key ubuntu@ec2-3-144-91-230.us-east-2.compute.amazonaws.com "docker images"
               env:
                   AWS_SSH_KEY: ${{ secrets.AWS_SSH_KEY }}
 
@@ -101,12 +101,12 @@ jobs:
             
             - name: Copy docker-compose.yml to AWS VM
               run: |
-                 scp -o StrictHostKeyChecking=no -i ~/.ssh/aws_key docker-compose.yml ubuntu@ec2-18-216-190-163.us-east-2.compute.amazonaws.com:/home/ubuntu
+                 scp -o StrictHostKeyChecking=no -i ~/.ssh/aws_key docker-compose.yml ubuntu@ec2-3-144-91-230.us-east-2.compute.amazonaws.com:/home/ubuntu
             
             - name: Verify Docker Images
               run: |
-                  ssh -o StrictHostKeyChecking=no -i ~/.ssh/aws_key ubuntu@ec2-18-216-190-163.us-east-2.compute.amazonaws.com 'docker images'
+                  ssh -o StrictHostKeyChecking=no -i ~/.ssh/aws_key ubuntu@ec2-3-144-91-230.us-east-2.compute.amazonaws.com 'docker images'
          
             - name: Run docker-compose on AWS VM
               run: |
-                  ssh -o StrictHostKeyChecking=no -i ~/.ssh/aws_key ubuntu@ec2-18-216-190-163.us-east-2.compute.amazonaws.com 'docker stack deploy -c docker-compose.yml my_stack --detach=false'
+                  ssh -o StrictHostKeyChecking=no -i ~/.ssh/aws_key ubuntu@ec2-3-144-91-230.us-east-2.compute.amazonaws.com 'docker stack deploy -c docker-compose.yml my_stack --detach=false'
