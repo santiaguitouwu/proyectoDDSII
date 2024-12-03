@@ -50,11 +50,22 @@ jobs:
             - name: Install sshpass
               run: sudo apt-get install -y sshpass
 
-            - name: Install SSH pass
-              run:  |
-                ssh -i ${{secrets.AWS_SSH_KEY}} ubuntu@ec2-18-216-190-163.us-east-2.compute.amazonaws.com
-                cd /root/DDSII/
-                docker pull ghcr.io/
+            - name: Set up SSH key
+              run: |
+                  echo "${{ secrets.AWS_SSH_KEY }}" > ~/.ssh/aws_key
+                  chmod 600 ~/.ssh/aws_key
+        
+              # Paso para conectarse a la instancia EC2
+            - name: Connect to EC2
+              run: |
+                  ssh -i ~/.ssh/aws_key ubuntu@ec2-18-216-190-163.us-east-2.compute.amazonaws.com "echo 'Connected!'"
+                  cd /root/DDSII/
+                  docker pull ghcr.io/santiaguitouwu/dds2_cli:stable
+                  docker pull ghcr.io/santiaguitouwu/dds2_api:stable
+                  docker pull ghcr.io/santiaguitouwu/dds2_api:canary
+                  docker pull ghcr.io/santiaguitouwu/dds2_cli:canary
+              env:
+                  AWS_SSH_KEY: ${{ secrets.AWS_SSH_KEY }}
             
             - name: Copy docker-compose.yml to AWS VM
               run: |
@@ -63,4 +74,3 @@ jobs:
             - name: Run docker-compose on AWS VM
               run: |
                   ssh -o StrictHostKeyChecking=no -i ${{ secrets.AWS_SSH_KEY }} ubuntu@your-ec2-public-ip 'docker stack deploy -c docker-compose.yml my_stack --detach=false'
-
