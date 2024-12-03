@@ -16,7 +16,7 @@ services:
 
   # Servicio web (API) estable
   web-stable:
-    image: my_project_web:stable
+    image: dds2_api:stable
     environment:
       DATABASE_URL: postgres://postgres:root@postgres:5432/gatitos
     deploy:
@@ -26,7 +26,7 @@ services:
 
   # Servicio web (API) canary
   web-canary:
-    image: my_project_web:canary
+    image: dds2_api:canary
     environment:
       DATABASE_URL: postgres://postgres:root@postgres:5432/gatitos
     deploy:
@@ -38,7 +38,7 @@ services:
 
   # Servicio react (cliente) estable
   react-stable:
-    image: my_project_react:stable
+    image: dds2_cli:stable
     deploy:
       replicas: 3  # Replicas del servicio cliente estable
     ports:
@@ -48,7 +48,7 @@ services:
 
   # Servicio react (cliente) canary
   react-canary:
-    image: my_project_react:canary
+    image: dds2_cli:canary
     deploy:
       replicas: 1  # Solo 1 réplica para la versión canary
     ports:
