@@ -86,8 +86,8 @@ jobs:
                   ssh -o StrictHostKeyChecking=no -i ~/.ssh/aws_key ubuntu@ec2-18-216-190-163.us-east-2.compute.amazonaws.com "echo 'Connected!'"
                   ssh -o StrictHostKeyChecking=no -i ~/.ssh/aws_key ubuntu@ec2-18-216-190-163.us-east-2.compute.amazonaws.com "docker pull ghcr.io/santiaguitouwu/dds2_cli:stable"
                   ssh -o StrictHostKeyChecking=no -i ~/.ssh/aws_key ubuntu@ec2-18-216-190-163.us-east-2.compute.amazonaws.com "docker pull ghcr.io/santiaguitouwu/dds2_cli:canary"
-                  ssh -o StrictHostKeyChecking=no -i ~/.ssh/aws_key ubuntu@ec2-18-216-190-163.us-east-2.compute.amazonaws.com "docker pull ghcr.io/santiaguitouwu/dds2_cli:stable"
-                  ssh -o StrictHostKeyChecking=no -i ~/.ssh/aws_key ubuntu@ec2-18-216-190-163.us-east-2.compute.amazonaws.com "docker pull ghcr.io/santiaguitouwu/dds2_cli:canary"
+                  ssh -o StrictHostKeyChecking=no -i ~/.ssh/aws_key ubuntu@ec2-18-216-190-163.us-east-2.compute.amazonaws.com "docker pull ghcr.io/santiaguitouwu/dds2_api:stable"
+                  ssh -o StrictHostKeyChecking=no -i ~/.ssh/aws_key ubuntu@ec2-18-216-190-163.us-east-2.compute.amazonaws.com "docker pull ghcr.io/santiaguitouwu/dds2_api:canary"
                   ssh -o StrictHostKeyChecking=no -i ~/.ssh/aws_key ubuntu@ec2-18-216-190-163.us-east-2.compute.amazonaws.com "docker images"
               env:
                   AWS_SSH_KEY: ${{ secrets.AWS_SSH_KEY }}
@@ -106,11 +106,7 @@ jobs:
             - name: Verify Docker Images
               run: |
                   ssh -o StrictHostKeyChecking=no -i ~/.ssh/aws_key ubuntu@ec2-18-216-190-163.us-east-2.compute.amazonaws.com 'docker images'
-            
-            - name: Init Docker Swarm
-              run: |
-                  ssh -o StrictHostKeyChecking=no -i ~/.ssh/aws_key ubuntu@ec2-18-216-190-163.us-east-2.compute.amazonaws.com 'docker swarm init'
-                  
+         
             - name: Run docker-compose on AWS VM
               run: |
                   ssh -o StrictHostKeyChecking=no -i ~/.ssh/aws_key ubuntu@ec2-18-216-190-163.us-east-2.compute.amazonaws.com 'docker stack deploy -c docker-compose.yml my_stack --detach=false'
