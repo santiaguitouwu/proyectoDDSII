@@ -20,7 +20,7 @@ services:
     environment:
       DATABASE_URL: postgres://postgres:root@postgres:5432/gatitos
     deploy:
-      replicas: 3  # Replicas del servicio API estable
+      replicas: 1  # Replicas del servicio API estable
     ports:
       - "8000:8000"
 
@@ -40,7 +40,7 @@ services:
   react-stable:
     image: ghcr.io/santiaguitouwu/dds2_cli:stable
     deploy:
-      replicas: 3  # Replicas del servicio cliente estable
+      replicas: 1  # Replicas del servicio cliente estable
     ports:
       - "3000:3000"
     depends_on:
