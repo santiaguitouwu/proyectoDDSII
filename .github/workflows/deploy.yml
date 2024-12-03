@@ -25,22 +25,22 @@ jobs:
 
             - name: Build the docker image PETCARE_API_Stable
               run: |
-                docker build ./petcareAPI --tag ghcr.io/santiaguitouwu/DDSII_API_Stable
+                docker build ./petcareAPI --tag ghcr.io/santiaguitouwu/dds2_api:stable
                 docker push ghcr.io/santiaguitouwu/DDSII_API
 
             - name: Build the docker image PETCARE_API_Canary
               run: |
-                  docker build ./petcareAPI --tag ghcr.io/santiaguitouwu/DDSII_API_Canary
+                  docker build ./petcareAPI --tag ghcr.io/santiaguitouwu/dds2_api:canary
                   docker push ghcr.io/santiaguitouwu/DDSII_API
             
             - name: Build the docker image PETCARE_CLIENT_Stable
               run: |
-                  docker build ./petcareCLIENT --tag ghcr.io/santiaguitouwu/DDSII_CLIENT_Stable
+                  docker build ./petcareCLIENT --tag ghcr.io/santiaguitouwu/dds2_cli:stable
                   docker push ghcr.io/santiaguitouwu/DDSII_CLIENT
 
             - name: Build the docker image PETCARE_CLIENT_Stable
               run: |
-                  docker build ./petcareCLIENT --tag ghcr.io/santiaguitouwu/DDSII_CLIENT_Stable
+                  docker build ./petcareCLIENT --tag ghcr.io/santiaguitouwu/dds2_cli:canary
                   docker push ghcr.io/santiaguitouwu/DDSII_CLIENT
 
     deploy-on-AWS:
