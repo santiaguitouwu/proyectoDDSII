@@ -73,6 +73,11 @@ jobs:
                   docker pull ghcr.io/santiaguitouwu/dds2_cli:canary
               env:
                   AWS_SSH_KEY: ${{ secrets.AWS_SSH_KEY }}
+
+            # Verifica que el archivo 'docker-compose.yml' esté en la raíz del proyecto
+            - name: List project files for debugging
+              run: |
+                    ls -la
             
             - name: Copy docker-compose.yml to AWS VM
               run: |
