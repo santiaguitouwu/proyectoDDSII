@@ -24,8 +24,12 @@ const PetForm = () => {
     // Obtienes valores formulario
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log('Datos del formulario:', formData);
-        await createPet(formData)
+        try {
+            await createPet(formData);
+            alert('Pet created succesfull :3')
+        } catch (error) {
+            alert('Error: ' + error)
+        }
     };
 
     return (
