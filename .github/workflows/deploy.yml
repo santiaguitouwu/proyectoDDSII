@@ -13,8 +13,8 @@ jobs:
     create-docker-images:
         runs-on: ubuntu-latest
         steps:
-            - name: Check out the repository
-              uses: actions/checkout@v2
+            - name: Checkout repository
+              uses: actions/checkout@v3
 
             - name: Login to Github Container Registry
               uses: docker/login-action@v2
@@ -82,7 +82,7 @@ jobs:
             
             - name: Copy docker-compose.yml to AWS VM
               run: |
-                 scp -o StrictHostKeyChecking=no -i ~/.ssh/aws_key docker-compose.yml ubuntu@ec2-18-216-190-163.us-east-2.compute.amazonaws.com:/home/ubuntu
+                 scp -o StrictHostKeyChecking=no -i ~/.ssh/aws_key ./docker-compose.yml ubuntu@ec2-18-216-190-163.us-east-2.compute.amazonaws.com:/home/ubuntu
         
             - name: Run docker-compose on AWS VM
               run: |
