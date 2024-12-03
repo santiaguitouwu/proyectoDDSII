@@ -97,4 +97,4 @@ jobs:
         
             - name: Run docker-compose on AWS VM
               run: |
-                  ssh -o StrictHostKeyChecking=no -i ${{ secrets.AWS_SSH_KEY }} ubuntu@ec2-18-216-190-163.us-east-2.compute.amazonaws.com 'docker stack deploy -c docker-compose.yml my_stack --detach=false'
+                  ssh -o StrictHostKeyChecking=no -i ~/.ssh/aws_key ubuntu@ec2-18-216-190-163.us-east-2.compute.amazonaws.com 'docker stack deploy -c docker-compose.yml my_stack --detach=false'
