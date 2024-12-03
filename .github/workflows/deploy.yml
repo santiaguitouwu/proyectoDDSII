@@ -26,22 +26,22 @@ jobs:
             - name: Build the docker image PETCARE_API_Stable
               run: |
                 docker build ./petcareAPI --tag ghcr.io/santiaguitouwu/dds2_api:stable
-                docker push ghcr.io/santiaguitouwu/DDSII_API
+                docker push ghcr.io/santiaguitouwu/dds2_api:stable
 
             - name: Build the docker image PETCARE_API_Canary
               run: |
                   docker build ./petcareAPI --tag ghcr.io/santiaguitouwu/dds2_api:canary
-                  docker push ghcr.io/santiaguitouwu/DDSII_API
+                  docker push ghcr.io/santiaguitouwu/dds2_api:canary
             
             - name: Build the docker image PETCARE_CLIENT_Stable
               run: |
                   docker build ./petcareCLIENT --tag ghcr.io/santiaguitouwu/dds2_cli:stable
-                  docker push ghcr.io/santiaguitouwu/DDSII_CLIENT
+                  docker push ghcr.io/santiaguitouwu/dds2_cli:stable
 
             - name: Build the docker image PETCARE_CLIENT_Stable
               run: |
                   docker build ./petcareCLIENT --tag ghcr.io/santiaguitouwu/dds2_cli:canary
-                  docker push ghcr.io/santiaguitouwu/DDSII_CLIENT
+                  docker push ghcr.io/santiaguitouwu/dds2_cli:canary
 
     deploy-on-AWS:
         needs: create-docker-images
@@ -53,8 +53,24 @@ jobs:
             - name: Install SSH pass
               run:  |
                 ssh -i ${{secrets.AWS_SSH_KEY}} ubuntu@ec2-18-216-190-163.us-east-2.compute.amazonaws.com
-                cd /root/DDSII/
-                docker pull ghcr.io/
+                
+
+            - name: Set up SSH key
+              run: |
+                  echo "${{ secrets.AWS_SSH_KEY }}" > ~/.ssh/aws_key
+                  chmod 600 ~/.ssh/aws_key
+        
+              # Paso para conectarse a la instancia EC2
+            - name: Connect to EC2
+              run: |
+                  ssh -i ~/.ssh/aws_key ubuntu@ec2-18-216-190-163.us-east-2.compute.amazonaws.com "echo 'Connected!'"
+                  cd /root/DDSII/
+                  docker pull ghcr.io/santiaguitouwu/dds2_cli:stable
+                  docker pull ghcr.io/santiaguitouwu/dds2_api:stable
+                  docker pull ghcr.io/santiaguitouwu/dds2_api:canary
+                  docker pull ghcr.io/santiaguitouwu/dds2_cli:canary
+              env:
+                  AWS_SSH_KEY: ${{ secrets.AWS_SSH_KEY }}
             
             - name: Copy docker-compose.yml to AWS VM
               run: |
