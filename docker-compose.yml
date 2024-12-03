@@ -2,69 +2,59 @@ version: '3.8'
 
 services:
   postgres:
-    build:
-      context: ./petcareAPI/postgresql
-      dockerfile: Dockerfile
-    container_name: mi_postgres
+    image: postgres:latest
     environment:
-      DB_HOST: postgres
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: root
       POSTGRES_DB: gatitos
-    ports:
-      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    deploy:
+      replicas: 1
+    ports:
+      - "5432:5432"
 
-  web:
-    build:
-      context: ./petcareAPI/
-      dockerfile: Dockerfile
-    container_name: django_web
-    command: >
-              ./wait-for-it.sh 
-              sh -c "
-                python manage.py migrate && 
-                python manage.py test &&
-                python manage.py shell < create_user.py &&
-                python manage.py runserver 0.0.0.0:8000
-              "
-    volumes:
-      - ./petcareAPI/:/app
+  # Servicio web (API) estable
+  web-stable:
+    image: my_project_web:stable
+    environment:
+      DATABASE_URL: postgres://postgres:root@postgres:5432/gatitos
+    deploy:
+      replicas: 3  # Replicas del servicio API estable
     ports:
       - "8000:8000"
+
+  # Servicio web (API) canary
+  web-canary:
+    image: my_project_web:canary
+    environment:
+      DATABASE_URL: postgres://postgres:root@postgres:5432/gatitos
+    deploy:
+      replicas: 1  # Solo 1 réplica para la versión canary
+    ports:
+      - "8001:8000"  # Exponer en un puerto diferente
     depends_on:
       - postgres
-    environment:
-      - DEBUG=True
-      - DATABASE_URL=postgres://postgres:root@postgres:5432/postgres
-      - POSTGRES_HOST=postgres
-      - POSTGRES_PORT=5432
 
-  react:
-    build: 
-      context: ./petcareCLIENT/
-      dockerfile: Dockerfile
-    volumes:
-      - ./petcareCLIENT:/app
+  # Servicio react (cliente) estable
+  react-stable:
+    image: my_project_react:stable
+    deploy:
+      replicas: 3  # Replicas del servicio cliente estable
     ports:
       - "3000:3000"
     depends_on:
-      - web
-    command: npm run dev -- --port 3000 --host
-    
-  sonarqube:
-    image: sonarqube:latest
-    container_name: sonarqube
+      - web-stable
+
+  # Servicio react (cliente) canary
+  react-canary:
+    image: my_project_react:canary
+    deploy:
+      replicas: 1  # Solo 1 réplica para la versión canary
     ports:
-      - "9000:9000"
-    volumes:
-      - sonarqube_data:/opt/sonarqube/data
-      - sonarqube_extensions:/opt/sonarqube/extensions
-      - sonarqube_logs:/opt/sonarqube/logs
+      - "3001:3000"  # Exponer en un puerto diferente
+    depends_on:
+      - web-canary
 
 volumes:
   postgres_data:
-  sonarqube_data:
-  sonarqube_extensions:
-  sonarqube_logs:
