@@ -13,8 +13,15 @@ jobs:
     create-docker-images:
         runs-on: ubuntu-latest
         steps:
-            - name: Check out the repository
-              uses: actions/checkout@v2
+            - name: Checkout repository
+              uses: actions/checkout@v3
+
+            # Verifica que el archivo 'docker-compose.yml' esté en la raíz del proyecto
+            - name: List project files for debugging
+              run: |
+                    pwd
+                    cat ./PAT.txt
+                    ls -la
 
             - name: Login to Github Container Registry
               uses: docker/login-action@v2
@@ -47,6 +54,9 @@ jobs:
         needs: create-docker-images
         runs-on: ubuntu-latest       
         steps:
+            - name: Checkout repository
+              uses: actions/checkout@v3
+              
             - name: Install sshpass
               run: sudo apt-get install -y sshpass
             
@@ -59,30 +69,47 @@ jobs:
 
             - name: Set up SSH key
               run: |
+                  mkdir -p ~/.ssh
                   echo "${{ secrets.AWS_SSH_KEY }}" > ~/.ssh/aws_key
                   chmod 600 ~/.ssh/aws_key
+
+            - name: Login to Github Container Registry
+              uses: docker/login-action@v2
+              with:
+                registry: ghcr.io
+                username: ${{github.actor}}
+                password: ${{secrets.TOKEN_CD}}
         
               # Paso para conectarse a la instancia EC2
             - name: Connect to EC2
               run: |
-                  ssh -i ~/.ssh/aws_key ubuntu@ec2-18-216-190-163.us-east-2.compute.amazonaws.com "echo 'Connected!'"
-                  cd /root/DDSII/
+                  ssh -o StrictHostKeyChecking=no -i ~/.ssh/aws_key ubuntu@ec2-18-216-190-163.us-east-2.compute.amazonaws.com "echo 'Connected!'"
                   docker pull ghcr.io/santiaguitouwu/dds2_cli:stable
                   docker pull ghcr.io/santiaguitouwu/dds2_api:stable
                   docker pull ghcr.io/santiaguitouwu/dds2_api:canary
                   docker pull ghcr.io/santiaguitouwu/dds2_cli:canary
               env:
                   AWS_SSH_KEY: ${{ secrets.AWS_SSH_KEY }}
+
+            # Verifica que el archivo 'docker-compose.yml' esté en la raíz del proyecto
+            - name: List project files for debugging
+              run: |
+                    pwd
+                    cat ./PAT.txt
+                    ls -la
             
             - name: Copy docker-compose.yml to AWS VM
               run: |
-                 scp -o StrictHostKeyChecking=no -i ${{ secrets.AWS_SSH_KEY }} docker-compose.yml ubuntu@ec2-18-216-190-163.us-east-2.compute.amazonaws.com:/root/DDSII/
+                 scp -o StrictHostKeyChecking=no -i ~/.ssh/aws_key docker-compose.yml ubuntu@ec2-18-216-190-163.us-east-2.compute.amazonaws.com:/home/ubuntu
             
-                 - name: Run docker-compose on AWS VM
-                 run: |
-                     ssh -o StrictHostKeyChecking=no -i ${{ secrets.AWS_SSH_KEY }} ubuntu@your-ec2-public-ip 'docker images'
-        
+            - name: Verify Docker Images
+              run: |
+                  ssh -o StrictHostKeyChecking=no -i ~/.ssh/aws_key ubuntu@ec2-18-216-190-163.us-east-2.compute.amazonaws.com 'docker images'
+            
+            - name: Init Docker Swarm
+              run: |
+                  ssh -o StrictHostKeyChecking=no -i ~/.ssh/aws_key ubuntu@ec2-18-216-190-163.us-east-2.compute.amazonaws.com 'docker swarm init'
+                  
             - name: Run docker-compose on AWS VM
               run: |
-                  ssh -o StrictHostKeyChecking=no -i ${{ secrets.AWS_SSH_KEY }} ubuntu@your-ec2-public-ip 'docker stack deploy -c docker-compose.yml my_stack --detach=false'
-
+                  ssh -o StrictHostKeyChecking=no -i ~/.ssh/aws_key ubuntu@ec2-18-216-190-163.us-east-2.compute.amazonaws.com 'docker stack deploy -c docker-compose.yml my_stack --detach=false'
