@@ -60,7 +60,6 @@ jobs:
             - name: Connect to EC2
               run: |
                   ssh -o StrictHostKeyChecking=no -i ~/.ssh/aws_key ubuntu@ec2-18-216-190-163.us-east-2.compute.amazonaws.com "echo 'Connected!'"
-                  cd /root/DDSII/
                   docker pull ghcr.io/santiaguitouwu/dds2_cli:stable
                   docker pull ghcr.io/santiaguitouwu/dds2_api:stable
                   docker pull ghcr.io/santiaguitouwu/dds2_api:canary
@@ -70,7 +69,7 @@ jobs:
             
             - name: Copy docker-compose.yml to AWS VM
               run: |
-                 scp -o StrictHostKeyChecking=no -i ${{ secrets.AWS_SSH_KEY }} docker-compose.yml ubuntu@ec2-18-216-190-163.us-east-2.compute.amazonaws.com:/root/DDSII/
+                 scp -o StrictHostKeyChecking=no -i ${{ secrets.AWS_SSH_KEY }} docker-compose.yml ubuntu@ec2-18-216-190-163.us-east-2.compute.amazonaws.com:/home/ubuntu
         
             - name: Run docker-compose on AWS VM
               run: |
