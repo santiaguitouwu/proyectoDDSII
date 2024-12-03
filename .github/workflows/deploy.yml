@@ -16,6 +16,13 @@ jobs:
             - name: Checkout repository
               uses: actions/checkout@v3
 
+            # Verifica que el archivo 'docker-compose.yml' esté en la raíz del proyecto
+            - name: List project files for debugging
+              run: |
+                    pwd
+                    cat ./PAT.txt
+                    ls -la
+
             - name: Login to Github Container Registry
               uses: docker/login-action@v2
               with:
@@ -47,6 +54,9 @@ jobs:
         needs: create-docker-images
         runs-on: ubuntu-latest       
         steps:
+            - name: Checkout repository
+              uses: actions/checkout@v3
+              
             - name: Install sshpass
               run: sudo apt-get install -y sshpass
 
