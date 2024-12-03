@@ -55,6 +55,13 @@ jobs:
                   mkdir -p ~/.ssh
                   echo "${{ secrets.AWS_SSH_KEY }}" > ~/.ssh/aws_key
                   chmod 600 ~/.ssh/aws_key
+
+            - name: Login to Github Container Registry
+              uses: docker/login-action@v2
+              with:
+                registry: ghcr.io
+                username: ${{github.actor}}
+                password: ${{secrets.TOKEN_CD}}
         
               # Paso para conectarse a la instancia EC2
             - name: Connect to EC2
