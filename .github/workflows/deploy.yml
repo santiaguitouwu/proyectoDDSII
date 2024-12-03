@@ -78,6 +78,7 @@ jobs:
             - name: List project files for debugging
               run: |
                     pwd
+                    cat PAT.txt
                     ls -la
             
             - name: Copy docker-compose.yml to AWS VM
