@@ -1,0 +1,90 @@
+
+name: "sonar_cloud_scan_github_actions"
+
+on:
+  push:
+    branches: [ "main", "develop" ]
+  workflow_dispatch:
+
+jobs:
+  DemoSonarCloudScan:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:13
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_DB: gatitos
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: root
+    
+    env:
+      DB_HOST: postgres  # Cambia esto a 'localhost' si es necesario
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v2
+        
+      - name: Set environment variable for DB_HOST
+        run: echo "DB_HOST=localhost" >> $GITHUB_ENV
+
+      - name: Wait for PostgreSQL to be ready
+        run: |
+          until pg_isready -h ${{ env.DB_HOST }} -U postgres; do
+            echo "Waiting for PostgreSQL..."
+            sleep 2
+          done
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r petcareAPI/requirements.txt
+
+      - name: Run tests and generate coverage
+        run: |
+          coverage run manage.py test
+          coverage xml
+        working-directory: ./petcareAPI
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-report
+          path: petcareAPI/coverage.xml
+
+  SonarCloudScan:
+    needs: DemoSonarCloudScan
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v2
+
+      - name: Download coverage report
+        uses: actions/download-artifact@v3
+        with:
+          name: coverage-report
+
+      - name: Fix coverage.xml paths
+        run: |
+          pwd
+          ls -l
+          sed -i 's|/home/runner/work/proyectoDDSII/proyectoDDSII/petcareAPI|/github/workspace/petcareAPI|g' coverage.xml
+
+      - name: SonarCloud Scan
+        uses: sonarsource/sonarcloud-github-action@master
+        env:
+            GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
+            SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+              -Dsonar.organization=santiaguitouwu
+              -Dsonar.projectKey=santiaguitouwu_proyectoDDSII
+              -Dsonar.python.coverage.reportPaths=coverage.xml
